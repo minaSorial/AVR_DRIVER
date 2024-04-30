@@ -1,0 +1,20 @@
+
+#include "RTOS_int.h"
+
+
+
+ RTOS_Task task_tabele[3]={
+
+	 {.first_dlay=0,.period=1000,.pfun },
+
+
+ };
+
+void RTOS_vidInit(void){}
+
+void RTOS_schadular(void){
+
+
+
+
+}

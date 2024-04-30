@@ -1,0 +1,10 @@
+
+
+#ifndef RTOS_CFG_H_
+#define RTOS_CFG_H_
+
+#define RTOS_Task_NUM 6
+//#define RTOS_PORT_NUM 1
+
+
+#endif /* RTOS_CFG_H_ */

@@ -1,0 +1,26 @@
+/*
+ * RTOS_cfg.c
+ *
+ *  Created on: 13 Nov 2023
+ *      Author: Mizoo
+ */
+#include "STD_TYPES.h"
+#include "RTOS_int.h"
+#include "RTOS_cfg.h"
+
+
+void blink1000(void);
+void blink500(void);
+void blink250(void);
+
+
+RTOS_Task * tasks[10];
+
+RTOS_Task task1 = {.first_dlay=0,.period=1000,.pfun=blink1000};
+RTOS_Task task2 = {.first_dlay=250,.period=500,.pfun=blink500};
+RTOS_Task task3 = {.first_dlay=375,.period=250,.pfun=blink250};
+
+RTOS_Task *task_tabele[10]={&task1,&task2,&task3};
+
+
+

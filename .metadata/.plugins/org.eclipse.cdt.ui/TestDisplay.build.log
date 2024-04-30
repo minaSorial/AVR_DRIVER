@@ -1,0 +1,55 @@
+22:59:33 **** Build of configuration Debug for project TestDisplay ****
+make all 
+Building file: ../DIO_cfg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"DIO_cfg.d" -MT"DIO_cfg.o" -c -o "DIO_cfg.o" "../DIO_cfg.c"
+Finished building: ../DIO_cfg.c
+ 
+Building file: ../DIO_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"DIO_prg.d" -MT"DIO_prg.o" -c -o "DIO_prg.o" "../DIO_prg.c"
+Finished building: ../DIO_prg.c
+ 
+Building file: ../main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"main.d" -MT"main.o" -c -o "main.o" "../main.c"
+In file included from ../main.c:2:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+../main.c: In function 'init':
+../main.c:11: warning: implicit declaration of function 'write_command'
+../main.c: At top level:
+../main.c:27: warning: conflicting types for 'write_command'
+../main.c:11: warning: previous implicit declaration of 'write_command' was here
+Finished building: ../main.c
+ 
+Building target: TestDisplay.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,TestDisplay.map -mmcu=atmega32 -o "TestDisplay.elf"  ./DIO_cfg.o ./DIO_prg.o ./main.o   
+Finished building target: TestDisplay.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S TestDisplay.elf  >"TestDisplay.lss"
+Finished building: TestDisplay.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex TestDisplay.elf  "TestDisplay.hex"
+Finished building: TestDisplay.hex
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 TestDisplay.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    6894 bytes (21.0% Full)
+(.text + .data + .bootloader)
+
+Data:         50 bytes (2.4% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+22:59:34 Build Finished. 0 errors, 4 warnings. (took 1s.140ms)
+

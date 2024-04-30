@@ -1,0 +1,167 @@
+#include "std_types.h"
+#include "util/delay.h"
+#include "DIO_int.h"
+
+#include "STD_BITMAN.h"
+#include "avr/io.h"
+#include "avr/interrupt.h"
+
+
+
+
+//void __vector_1 (void) __attribute__ ((signal,used,externally_visible));
+
+
+//void __vector_1 (void)
+
+u8 timer_counter=1;
+
+void (*pfun)(void);
+
+
+void ISR_callBack1( void ){
+
+	TCNT1=64363;
+
+	timer_counter--;
+
+}
+
+
+
+ISR(TIMER1_OVF_vect)
+{
+
+
+	if(pfun){
+		pfun();
+	}else{
+
+	}
+}
+
+
+
+
+
+int main ( void){
+
+	pfun=ISR_callBack1;
+
+
+	DIO_vidInit();
+	// MCUCR
+	// IntR 0
+	/*
+	BIT_CLEAR(MCUCR,ISC00);
+	BIT_SET(MCUCR,ISC01);
+
+	//GICR
+	BIT_SET(GICR,INT0);
+
+	BIT_SET(GIFR, INTF0);
+
+	// SREG global
+
+	BIT_SET(SREG,SREG_I);
+	 */
+
+
+
+	// enable Timer_1 interputpes
+	BIT_SET(TIMSK,TOIE1);
+	//BIT_SET(SREG,SREG_I);
+
+
+	// wave generation
+	BIT_CLEAR(TCCR0,WGM00);
+	BIT_CLEAR(TCCR0,WGM01);
+
+	// prescaler slecet
+	BIT_SET(TCCR0,CS02);
+	BIT_CLEAR(TCCR0,CS01);
+	BIT_SET(TCCR0,CS00);
+
+
+
+	// timer_1 16 bit
+	BIT_CLEAR(TCCR1A,WGM10);
+	BIT_CLEAR(TCCR1A,WGM11);
+
+	BIT_CLEAR(TCCR1B,WGM12);
+	BIT_CLEAR(TCCR1B,WGM13);
+
+
+	BIT_SET(TCCR1B,CS10);
+	BIT_CLEAR(TCCR1B,CS11);
+	BIT_SET(TCCR1B,CS12);
+
+
+
+
+	TCNT1=64363;
+
+
+
+
+
+
+
+	u8 led_state=DIO_LOW;
+
+
+	// enable gloable interpusts afssd
+
+	BIT_SET(SREG,SREG_I);
+
+	while(1){
+
+		//DIO_enuSetPinValue(5,DIO_HIGH)  ;
+		//DIO_enuSetPinValue(3,DIO_HIGH);
+
+		//IO_enuSetPinValue(4,DIO_HIGH);
+
+		while((BIT_GET(TIFR,TOV1))==0){
+
+		}
+		TCNT1=64363;
+		timer_counter--;
+		BIT_SET(TIFR,TOV1);
+
+		//DIO_enuSetPinValue(4,DIO_LOW);
+
+
+		DIO_enuSetPinValue(4,led_state);
+		if (timer_counter==0){
+
+			if(led_state==DIO_LOW){
+				led_state=DIO_HIGH;
+			}
+			else{
+				led_state=DIO_LOW;
+			}
+
+
+			timer_counter=1;
+
+		}else{
+
+
+		}
+
+
+		/*_delay_ms(150);
+		DIO_enuSetPinValue(4,DIO_HIGH);
+		_delay_ms(150);
+		DIO_enuSetPinValue(4,DIO_LOW);
+		 */
+
+
+	}
+
+
+
+
+
+
+}

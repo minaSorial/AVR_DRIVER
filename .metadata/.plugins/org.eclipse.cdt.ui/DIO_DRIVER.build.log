@@ -1,0 +1,40 @@
+19:36:39 **** Build of configuration Debug for project DIO_DRIVER ****
+make all 
+Building file: ../DIO_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"DIO_prg.d" -MT"DIO_prg.o" -c -o "DIO_prg.o" "../DIO_prg.c"
+../DIO_prg.c: In function 'DIO_vidInit':
+../DIO_prg.c:99: warning: suggest parentheses around comparison in operand of &
+Finished building: ../DIO_prg.c
+ 
+Building target: DIO_DRIVER.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,DIO_DRIVER.map -mmcu=atmega32 -o "DIO_DRIVER.elf"  ./DIO_cfg.o ./DIO_prg.o ./main.o   
+Finished building target: DIO_DRIVER.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S DIO_DRIVER.elf  >"DIO_DRIVER.lss"
+Finished building: DIO_DRIVER.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex DIO_DRIVER.elf  "DIO_DRIVER.hex"
+Finished building: DIO_DRIVER.hex
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 DIO_DRIVER.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    2240 bytes (6.8% Full)
+(.text + .data + .bootloader)
+
+Data:         44 bytes (2.1% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+19:36:39 Build Finished. 0 errors, 1 warnings. (took 677ms)
+

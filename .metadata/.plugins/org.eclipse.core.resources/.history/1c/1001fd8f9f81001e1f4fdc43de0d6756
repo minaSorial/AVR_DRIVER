@@ -1,0 +1,12 @@
+#ifndef RTOS_INT_H_
+#define RTOS_INT_H_
+
+
+void RTOS_vidInit(void){
+
+
+}
+
+
+
+#endif RTOS_INT_H_

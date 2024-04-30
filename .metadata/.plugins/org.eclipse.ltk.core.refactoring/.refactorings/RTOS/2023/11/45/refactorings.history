@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;RTOS/RTOS_int&apos; to &apos;RTOS_int.h&apos;" description="Rename resource &apos;RTOS_int&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="RTOS_int" name="RTOS_int.h" stamp="1699821330016" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;RTOS/RTOS_prg&apos; to &apos;RTOS_prg.c&apos;" description="Rename resource &apos;RTOS_prg&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="RTOS_prg" name="RTOS_prg.c" stamp="1699821339909" updateReferences="true"/>
+</session>

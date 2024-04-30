@@ -1,0 +1,20 @@
+01:11:27 **** Incremental Build of configuration Debug for project SEG_DRIVER ****
+make all 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 SEG_DRIVER.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:    7614 bytes (23.2% Full)
+(.text + .data + .bootloader)
+
+Data:         68 bytes (3.3% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 
+
+01:11:27 Build Finished. 0 errors, 0 warnings. (took 224ms)
+

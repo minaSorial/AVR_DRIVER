@@ -1,0 +1,115 @@
+#include "std_types.h"
+#include "util/delay.h"
+#include "DIO_int.h"
+
+#include "STD_BITMAN.h"
+#include "avr/io.h"
+#include "avr/interrupt.h"
+
+
+
+
+//void __vector_1 (void) __attribute__ ((signal,used,externally_visible));
+
+
+//void __vector_1 (void)
+
+
+void (*pfun)(void);
+static STD_Bool onFlag=STD_false;
+
+void ISR_callBack1( void ){
+
+	static u8 count=0;
+	count ++;
+
+
+	// _delay_ms(50);
+	//static STD_Bool onFlag=STD_true;
+
+	if (count>=2){
+		if(onFlag==STD_true){
+			//DIO_enuSetPinValue(3,DIO_HIGH);
+			onFlag=STD_false;
+		}
+		else{
+			//DIO_enuSetPinValue(3,DIO_LOW);
+			onFlag=STD_true;
+
+		}
+		count=0;
+
+	}
+	else{
+
+	}
+
+}
+
+
+
+ISR(INT0_vect)
+{
+
+
+	if(pfun){
+		pfun();
+	}else{
+
+	}
+}
+
+
+
+
+
+int main ( void){
+
+	pfun=ISR_callBack1;
+
+
+	DIO_vidInit();
+	// MCUCR
+	// IntR 0
+
+	BIT_CLEAR(MCUCR,ISC00);
+	BIT_SET(MCUCR,ISC01);
+
+	//GICR
+	BIT_SET(GICR,INT0);
+
+	BIT_SET(GIFR, INTF0);
+
+	// SREG global
+
+	BIT_SET(SREG,SREG_I);
+
+
+	while(1){
+
+		//DIO_enuSetPinValue(5,DIO_HIGH)  ;
+		//DIO_enuSetPinValue(3,DIO_HIGH);
+
+		// cretical section
+		BIT_CLEAR(SREG,SREG_I);
+		STD_Bool localflag=onFlag;
+		BIT_SET(SREG,SREG_I);
+		//  disable all intrupts while reading it
+
+
+
+		if(localflag==STD_true){
+			DIO_enuSetPinValue(3,DIO_HIGH);
+		}
+		else{
+
+			DIO_enuSetPinValue(3,DIO_LOW);
+
+		}
+
+
+	}
+
+
+
+}

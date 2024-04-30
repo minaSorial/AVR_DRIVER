@@ -1,0 +1,186 @@
+/*
+ * SEG_prg.c
+ *
+ *  Created on: 8 Aug 2023
+ *      Author: Mizoo
+ */
+
+#include "STD_TYPES.h"
+#include "STD_BITMAN.h"
+#include "DIO_int.h"
+#include "SEG_int.h"
+#include "SEG_cfg.h"
+#include "SEG_prv.h"
+
+static const  u8 u8SevenSegment[]=
+
+{
+		0b00111111, //0
+
+		0b00000110, //1
+
+		0b01011011,
+
+		0b01001111,
+
+		0b01100110,
+
+		0b01101101,
+
+		0b01111101,//6
+
+		0b00000111,
+
+		0b01111111,
+
+		0b01101111
+
+};
+
+static u8 u8arrSegCurVal[SEG_NUM];
+static u8 u8arrSegCurStatus[SEG_NUM];
+
+/*MMS: Init Shall only update the internal variables in this case as the POV might get distupted
+when initializing*/
+void SEG_vidInit(void){
+	u8 u8SegIdxLoc=0;
+
+	for (u8SegIdxLoc = 0; u8SegIdxLoc < SEG_NUM; ++u8SegIdxLoc){
+
+
+		const SEG_tstr * pstrCurrentSegLoc = & SEG_kastrCg[u8SegIdxLoc];
+
+
+		u8arrSegCurStatus[u8SegIdxLoc]=pstrCurrentSegLoc->u8InitState;
+
+		if(pstrCurrentSegLoc->u8Type==SEG_COM_ANODE){
+
+
+
+			u8arrSegCurVal[u8SegIdxLoc]=~u8SevenSegment[pstrCurrentSegLoc->u8InitValue];
+
+		}
+		else if (pstrCurrentSegLoc->u8Type==SEG_COM_CATHOD){
+
+			u8arrSegCurVal[u8SegIdxLoc]=u8SevenSegment[pstrCurrentSegLoc->u8InitValue];
+			//u8arrSegCurVal[u8SegIdxLoc]=u8SevenSegment[5];
+
+
+
+
+		}
+
+	}
+}
+
+STD_tenuReturn SEG_enuEnable(u8 u8SegmentIdx){
+
+	STD_tenuReturn status;
+
+	if(u8SegmentIdx>=SEG_NUM){
+		status=STD_enuOutOfRange;
+	}
+	else{
+
+		if (SEG_kastrCg[u8SegmentIdx].u8Type==SEG_COM_CATHOD){
+
+			DIO_enuSetPortValue(SEG_kastrCg[u8SegmentIdx].u8PortIdx,u8arrSegCurVal[u8SegmentIdx]);
+			DIO_enuSetPinValue(SEG_kastrCg[u8SegmentIdx].u8ControlPinIdx,DIO_LOW);
+			u8arrSegCurStatus[u8SegmentIdx]=SEG_ENABLED;
+			status=STD_enuOK;
+		}
+
+		else if (SEG_kastrCg[u8SegmentIdx].u8Type==SEG_COM_ANODE){
+
+			DIO_enuSetPortValue(SEG_kastrCg[u8SegmentIdx].u8PortIdx,u8arrSegCurVal[u8SegmentIdx]);
+			DIO_enuSetPinValue(SEG_kastrCg[u8SegmentIdx].u8ControlPinIdx,DIO_HIGH);
+			u8arrSegCurStatus[u8SegmentIdx]=SEG_ENABLED;
+			status=STD_enuOK;
+		}
+		else
+		{
+			status=STD_enuNOK;
+		}
+	}
+
+
+	return status;
+}
+
+STD_tenuReturn SEG_enuDisable(u8 u8SegmentIdx){
+
+
+	STD_tenuReturn status;
+
+	if(u8SegmentIdx>=SEG_NUM){
+		status=STD_enuOutOfRange;
+	}
+	else{
+
+		if (SEG_kastrCg[u8SegmentIdx].u8Type==SEG_COM_CATHOD){
+
+			DIO_enuSetPinValue(SEG_kastrCg[u8SegmentIdx].u8ControlPinIdx,DIO_HIGH);
+			u8arrSegCurStatus[u8SegmentIdx]=SEG_DISABLED;
+			status=STD_enuOK;
+		}
+
+		else if (SEG_kastrCg[u8SegmentIdx].u8Type==SEG_COM_ANODE){
+
+			DIO_enuSetPinValue(SEG_kastrCg[u8SegmentIdx].u8ControlPinIdx,DIO_LOW);
+			u8arrSegCurStatus[u8SegmentIdx]=SEG_DISABLED;
+			status=STD_enuOK;
+		}
+		else
+		{
+			status=STD_enuNOK;
+		}
+	}
+
+
+	return status;
+
+
+}
+
+STD_tenuReturn SEG_enuWrite (u8 u8SegmentIdx,u8 u8Number){
+
+	STD_tenuReturn status;
+
+	if(u8Number>9 || u8SegmentIdx>=SEG_NUM ){
+		status=STD_enuOutOfRange;
+	}
+	else {
+
+
+		if (SEG_kastrCg[u8SegmentIdx].u8Type==SEG_COM_CATHOD){
+
+			u8arrSegCurVal[u8SegmentIdx]= ~u8SevenSegment[u8Number];
+		}
+
+		else if(SEG_kastrCg[u8SegmentIdx].u8Type==SEG_COM_ANODE)
+		{
+			u8arrSegCurVal[u8SegmentIdx]= (u8SevenSegment[u8Number]);
+		}
+
+
+
+		if(u8arrSegCurStatus[u8SegmentIdx]==SEG_ENABLED){
+
+			DIO_enuSetPortValue(SEG_kastrCg[u8SegmentIdx].u8PortIdx,u8arrSegCurVal[u8SegmentIdx]);
+		}
+		status=STD_enuOK;
+	}
+
+
+
+	return status;
+}
+
+
+
+
+
+
+
+
+

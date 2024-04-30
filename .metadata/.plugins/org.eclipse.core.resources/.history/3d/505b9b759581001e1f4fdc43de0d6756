@@ -1,0 +1,174 @@
+#include "std_types.h"
+#include "util/delay.h"
+#include "DIO_int.h"
+
+#include "STD_BITMAN.h"
+#include "avr/io.h"
+#include "avr/interrupt.h"
+
+
+
+
+//void __vector_1 (void) __attribute__ ((signal,used,externally_visible));
+
+
+//void __vector_1 (void)
+
+
+void (*pfun)(void);
+static STD_Bool onFlag=STD_false;
+
+void ISR_callBack1( void ){
+
+	static u8 count=0;
+	count ++;
+
+
+	// _delay_ms(50);
+	//static STD_Bool onFlag=STD_true;
+
+	if (count>=2){
+		if(onFlag==STD_true){
+			//DIO_enuSetPinValue(3,DIO_HIGH);
+			onFlag=STD_false;
+		}
+		else{
+			//DIO_enuSetPinValue(3,DIO_LOW);
+			onFlag=STD_true;
+
+		}
+		count=0;
+
+	}
+	else{
+
+	}
+
+}
+
+
+
+ISR(INT0_vect)
+{
+
+
+	if(pfun){
+		pfun();
+	}else{
+
+	}
+}
+
+
+
+
+
+int main ( void){
+
+	pfun=ISR_callBack1;
+
+
+	DIO_vidInit();
+	// MCUCR
+	// IntR 0
+	/*
+	BIT_CLEAR(MCUCR,ISC00);
+	BIT_SET(MCUCR,ISC01);
+
+	//GICR
+	BIT_SET(GICR,INT0);
+
+	BIT_SET(GIFR, INTF0);
+
+	// SREG global
+
+	BIT_SET(SREG,SREG_I);
+	 */
+
+	// wave generation
+	BIT_CLEAR(TCCR0,WGM00);
+	BIT_CLEAR(TCCR0,WGM01);
+
+	// prescaler slecet
+	BIT_SET(TCCR0,CS02);
+	BIT_CLEAR(TCCR0,CS01);
+	BIT_SET(TCCR0,CS00);
+
+
+
+	// timer_1 16 bit
+	BIT_CLEAR(TCCR1A,WGM10);
+	BIT_CLEAR(TCCR1A,WGM11);
+
+	BIT_CLEAR(TCCR1B,WGM12);
+	BIT_CLEAR(TCCR1B,WGM13);
+
+
+	BIT_SET(TCCR1B,CS10);
+	BIT_CLEAR(TCCR1B,CS11);
+	BIT_SET(TCCR1B,CS12);
+
+
+
+
+	TCNT1=64363;
+
+
+
+
+
+
+
+	u8 led_state=DIO_LOW;
+	u8 timer_counter=0;
+
+	while(1){
+
+		//DIO_enuSetPinValue(5,DIO_HIGH)  ;
+		//DIO_enuSetPinValue(3,DIO_HIGH);
+
+		//IO_enuSetPinValue(4,DIO_HIGH);
+
+		while((BIT_GET(TIFR,TOV1))==0){
+
+		}
+		timer_counter++;
+		BIT_SET(TIFR,TOV1);
+		TCNT1=64363;
+		//DIO_enuSetPinValue(4,DIO_LOW);
+
+
+
+		if (timer_counter==1){
+
+			if(led_state==DIO_LOW){
+				led_state=DIO_HIGH;
+			}
+			else{
+				led_state=DIO_LOW;
+			}
+
+			DIO_enuSetPinValue(4,led_state);
+			timer_counter=0;
+
+		}else{
+
+
+		}
+
+
+		/*_delay_ms(150);
+		DIO_enuSetPinValue(4,DIO_HIGH);
+		_delay_ms(150);
+		DIO_enuSetPinValue(4,DIO_LOW);
+		 */
+
+
+	}
+
+
+
+
+
+
+}

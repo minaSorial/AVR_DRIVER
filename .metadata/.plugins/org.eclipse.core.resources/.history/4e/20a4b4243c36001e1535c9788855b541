@@ -1,0 +1,159 @@
+/*
+ * main.c
+ *
+ *  Created on: 8 Aug 2023
+ *      Author: Mizoo
+ */
+
+#include "std_types.h"
+#include "util/delay.h"
+#include "DIO_int.h"
+#include "SEG_int.h"
+#include "STD_BITMAN.h"
+
+int main(void){
+
+	DIO_vidInit();
+	SEG_vidInit();
+	u8 index=0;
+
+	while(1){
+
+
+		u8 u8Switch1;
+		DIO_enuGetPinValue(0,&u8Switch1);
+
+
+		u8 u8Switch2;
+		DIO_enuGetPinValue(1,&u8Switch2);
+
+		//DIO_enuSetPortValue(0, u8Switch2);
+
+
+
+
+
+		if(u8Switch1==DIO_LOW)
+
+		{
+			_delay_ms(300);
+
+			index++;
+
+			if(index>=20)
+
+			{
+
+				index=0;
+
+			}else
+
+			{
+
+				//Do Nothing
+
+			}
+
+		}else if(u8Switch2==DIO_LOW)
+
+		{
+
+			_delay_ms(300);
+
+
+			if(index>0)
+
+			{
+
+				index--;
+
+			}else
+
+			{
+
+				index=20;
+
+			}
+
+
+
+
+		}
+
+
+		SEG_enuEnable(0);
+
+		//DIO_enuSetPinValue(2,DIO_LOW);
+		//SEG_enuWrite(0,(index/10));
+
+		//DIO_enuSetPortValue(0, u8SevenSegment[index/10]);
+
+		_delay_ms(20);
+
+		SEG_enuDisable(0);
+		_delay_ms(20);
+
+		SEG_enuEnable(1);
+
+		//SEG_enuWrite(1,(index%10));
+		//DIO_enuSetPortValue(0, u8SevenSegment[index%10]);
+
+
+		_delay_ms(20);
+		SEG_enuDisable(1);
+
+
+
+		//int index =0;
+		/*
+			for (index=0 ; index<10;index++){
+
+
+				DIO_enuSetPortValue(0, u8SevenSegment[index]);
+				_delay_ms(200);
+			}
+		 */
+
+
+
+		/*
+
+			DIO_enuSetPinValue(2,DIO_LOW);
+
+			DIO_enuSetPortValue(0, u8SevenSegment[5]);
+
+			_delay_ms(5);
+
+			DIO_enuSetPinValue(2,DIO_HIGH);
+
+			DIO_enuSetPinValue(3,DIO_LOW);
+
+			DIO_enuSetPortValue(0, u8SevenSegment[6]);
+
+			_delay_ms(5);
+
+			DIO_enuSetPinValue(3,DIO_HIGH);
+
+
+		 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+	}
+
+
+
+
+return 0;
+}
+

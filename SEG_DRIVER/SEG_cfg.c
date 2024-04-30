@@ -1,0 +1,26 @@
+/*
+ * SEG_cfg.c
+ *
+ *  Created on: 8 Aug 2023
+ *      Author: Mizoo
+ */
+
+#ifndef SEG_CFG_C_
+#define SEG_CFG_C_
+
+#include "STD_TYPES.h"
+#include "SEG_int.h"
+#include "SEG_cfg.h"
+
+
+
+const SEG_tstr SEG_kastrCg [SEG_NUM]={
+		{0,2,0,SEG_COM_CATHOD, SEG_DISABLED},
+		{0,3,0,SEG_COM_CATHOD, SEG_DISABLED},
+     };
+
+
+
+
+
+#endif /* SEG_CFG_C_ */

@@ -1,0 +1,4 @@
+
+
+void RTOS_vidInit(void);
+void RTOS_schadular();

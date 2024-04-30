@@ -1,0 +1,29 @@
+#ifndef RTOS_INT_H_
+#define RTOS_INT_H_
+
+
+
+typedef struct task{
+	u16 first_dlay;
+	u16 period;
+	void (*pfun)(void);
+	STD_Bool enable_flag;
+}RTOS_Task;
+
+
+
+
+
+
+void RTOS_vidInit(void);
+void RTOS_schadular(void);
+
+void RTOS_createTask(RTOS_Task);
+void RTOS_deleteTask(RTOS_Task);
+void RTOS_enable_task(u8 RTOS_Task_idx);
+void RTOS_disable_task(u8 RTOS_Task_idx);
+void RTOS_startRTOS(void);
+void RTOS_stopRTOS(void);
+void RTOS_sysTick(void);
+
+#endif //RTOS_INT_H_

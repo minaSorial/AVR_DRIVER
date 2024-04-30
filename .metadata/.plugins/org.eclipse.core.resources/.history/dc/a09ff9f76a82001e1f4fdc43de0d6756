@@ -1,0 +1,96 @@
+#include "STD_TYPES.h"
+#include "RTOS_int.h"
+#include "RTOS_cfg.h"
+#include "INT_int.h"
+
+
+volatile static STD_Bool RTOS_Tick;
+static STD_Bool RTOS_Start;
+
+void RTOS_vidInit(void){
+
+	RTOS_startRTOS();
+}
+
+void RTOS_sysTick(void){
+
+	INT_enterCritical();
+	RTOS_Tick=STD_true;
+	INT_exitCritical();
+
+}
+
+
+void RTOS_startRTOS(void){
+
+	RTOS_Start=STD_true;
+
+}
+void RTOS_stopRTOS(void){
+
+	RTOS_Start=STD_false;
+}
+
+
+void RTOS_enable_task(u8 RTOS_Task_idx){
+
+	if(task_tabele[RTOS_Task_idx]){
+
+		task_tabele[RTOS_Task_idx]->enable_flag=STD_true;
+	}else{
+
+	}
+
+}
+void RTOS_disable_task(u8 RTOS_Task_idx){
+
+	if(task_tabele[RTOS_Task_idx]){
+
+			task_tabele[RTOS_Task_idx]->enable_flag=STD_false;
+		}else{
+
+		}
+};
+
+
+void RTOS_schadular(void){
+
+
+	STD_Bool RTOS_Tick_loc=RTOS_Tick;
+
+	INT_enterCritical();
+	STD_Bool RTOS_Tick_loc=RTOS_Tick;
+
+		INT_exitCritical();
+
+	if(RTOS_Tick_loc == STD_true && RTOS_Start== STD_true){
+
+		u8 task_indx=0;
+		for (task_indx = 0; task_indx < RTOS_TASK_NUM; ++task_indx) {
+
+			RTOS_Task *curr_task=task_tabele[task_indx];
+
+			if(curr_task && (curr_task->enable_flag==STD_true)){
+				if(curr_task->first_dlay==0){
+
+					curr_task->pfun();
+					curr_task->first_dlay=curr_task->period-1;
+				}else{
+
+					curr_task->first_dlay--;
+				}
+
+			}
+			else {
+
+			}
+
+
+		}
+		RTOS_Tick = STD_false;
+	}else{
+
+
+	}
+
+}

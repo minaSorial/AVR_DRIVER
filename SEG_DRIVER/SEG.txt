@@ -1,0 +1,32 @@
+Config:
+Every Segmen shall have the follwing: 
+	Port_Idx: Connected Port idx from Configured DIOs,
+	Control pin IDx: Connected Control PIN from,
+	Segment Type: common anode/cathod
+	init state: SEG_ENABLED/SEG_DISABLED
+	Initial value: initial Value of Segment
+	
+APIs
+	Description: Initialize theSeven Segment with configuration;
+	Input: NA
+	out: NA
+void SEG_vidInit(void); 
+
+	Description: Enable Selected Index.
+	Input: u8SegmentIdx.
+	out: STD_tenuReturn
+STD_tenuReturn SEG_enuEnable(u8 u8SegmentIdx);
+
+	Description: Disable Selected Index.
+	Input: u8SegmentIdx.
+	out: STD_tenuReturn	
+STD_tenuReturn SEG_enuDisable(u8 u8SegmentIdx);
+
+
+STD_tenuReturn SEG_enuWrite (u8 u8Number);
+
+Note: 
+	No Calls to any function with out init
+	Enable after Ddisable: shows the previous number.
+	write is availble while disable;
+	

@@ -1,0 +1,13 @@
+/*
+ * INT_int.h
+ *
+ *  Created on: 13 Nov 2023
+ *      Author: Mizoo
+ */
+
+#ifndef INT_INT_H_
+#define INT_INT_H_
+
+#define INT_enterCritical() BIT_(SREG,SREG_I);
+
+#endif /* INT_INT_H_ */

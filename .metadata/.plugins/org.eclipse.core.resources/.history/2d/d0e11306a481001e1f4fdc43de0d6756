@@ -1,0 +1,35 @@
+#include "STD_TYPES.h"
+#include "RTOS_int.h"
+
+
+void blink1000(void);
+void blink500(void);
+void blink250(void);
+
+ RTOS_Task task_tabele[3]={
+
+	 {.first_dlay=0,.period=1000,.pfun=blink1000},
+	 {.first_dlay=250,.period=500,.pfun=blink500 },
+	 {.first_dlay=750,.period=250,.pfun=blink250 }
+
+
+ };
+
+void RTOS_vidInit(void){}
+
+void RTOS_schadular(void){
+
+	u8 task_indx=0;
+	for (task_indx = 0; task_indx < 3; ++task_indx) {
+
+		RTOS_Task *curr_task=&task_tabele[task_indx];
+		if(curr_task->first_dlay==0){
+
+			curr_task->pfun();
+			curr_task->first_dlay=curr_task->period-1;
+		}else{
+
+			curr_task->first_dlay--;
+		}
+	}
+}

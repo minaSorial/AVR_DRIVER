@@ -1,0 +1,26 @@
+#ifndef RTOS_INT_H_
+#define RTOS_INT_H_
+
+
+
+struct task{
+	u8 first_dlay;
+	u8 period;
+	void (*pfun)(void);
+};
+
+void RTOS_vidInit(void){
+
+
+}
+
+void RTOS_schadular(){
+
+
+
+
+}
+
+
+
+#endif //RTOS_INT_H_

@@ -1,0 +1,269 @@
+/*
+ * main.c
+ *
+ *  Created on: 8 Aug 2023
+ *      Author: Mizoo
+ */
+
+#include "std_types.h"
+#include "util/delay.h"
+#include "DIO_int.h"
+
+#include "STD_BITMAN.h"
+
+// pin 4 = Rs
+// pin 5 = Rw
+// pin 6 = Enable
+static const  u8 u8numAsci[]=
+
+{
+		'0', //0
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6',
+		'7',
+		'8',
+		'9',
+};
+
+typedef enum {add, sub,multi, div}operation;
+
+typedef enum { first, oper, second, result} stateId;
+
+
+tstrTransition first_trasitionTable[] =
+{
+		{
+				.TransitionEntry = 0xAA55,
+				.u8NextStateIdx = oper,
+				.pfnGaurd = first_operation_Gaurd,
+				.TransitionExit = 0x55AA
+		},
+};
+
+tstrTransition operation_trasitionTable[] =
+{
+		{
+				.TransitionEntry = 0xAA55,
+				.u8NextStateIdx = second,
+				.pfnGaurd = operation_second_Gaurd,
+				.TransitionExit = 0x55AA
+		},
+};
+tstrTransition second_trasitionTable[] =
+{
+		{
+				.TransitionEntry = 0xAA55,
+				.u8NextStateIdx = result,
+				.pfnGaurd = second_result_Gaurd,
+				.TransitionExit = 0x55AA
+		},
+};
+
+tstrTransition result_trasitionTable[] =
+{
+		{
+				.TransitionEntry = 0xAA55,
+				.u8NextStateIdx = first,
+				.pfnGaurd = result_first_Gaurd,
+				.TransitionExit = 0x55AA
+		},
+};
+
+
+
+
+
+void write_command(u8 command)
+{
+	// enable
+	DIO_enuSetPinValue(5, DIO_LOW);
+
+	//RS
+	DIO_enuSetPinValue(3,DIO_LOW);
+	//RW
+	DIO_enuSetPinValue(4,DIO_LOW);
+
+
+	DIO_enuSetPortValue(0,command);
+
+
+	DIO_enuSetPinValue(5, DIO_HIGH);
+	_delay_ms(5);
+	DIO_enuSetPinValue(5, DIO_LOW);
+
+
+}
+
+
+
+
+
+
+
+void write_data(u8 data)
+{
+
+
+	// enable
+	DIO_enuSetPinValue(5, DIO_LOW);
+
+	//RS
+	DIO_enuSetPinValue(3,DIO_HIGH);
+	//RW
+	DIO_enuSetPinValue(4,DIO_LOW);
+
+
+	DIO_enuSetPortValue(0,data);
+
+
+	DIO_enuSetPinValue(5, DIO_HIGH);
+	_delay_ms(5);
+	DIO_enuSetPinValue(5, DIO_LOW);
+
+}
+
+
+void init()
+{
+	_delay_ms(50);
+
+	write_command(0b00111000);
+
+	_delay_ms(5);
+	//enable display,no curser,not blinking
+
+	write_command(0b00001100);
+	_delay_ms(5);
+
+	//clear display
+	write_command(0b00000001);
+	_delay_ms(5);
+
+
+}
+
+void incrementDecrement(u8*num){
+	u8 u8Switch1;
+
+	u8 u8Switch2;
+	DIO_enuGetPinValue(0,&u8Switch1);
+	DIO_enuGetPinValue(1,&u8Switch2);
+	//DIO_enuGetPinValue(2,&u8Switch3);
+
+
+	if(u8Switch1==DIO_LOW)
+
+	{
+		_delay_ms(300);
+
+		(*num)++;
+
+		if((*num)>=10)
+
+		{
+
+			(*num)=0;
+
+		}else
+
+		{
+
+			//Do Nothing
+
+		}
+
+	}else if(u8Switch2==DIO_LOW)
+
+	{
+
+		_delay_ms(300);
+
+
+		if((*num)>0)
+
+		{
+
+			(*num)--;
+
+		}else
+
+		{
+
+			(*num)=9;
+
+		}
+
+	}
+
+
+
+
+
+}
+
+
+
+int main(void){
+
+	DIO_vidInit();
+	init();
+
+
+	//write_data('T');
+
+
+	u8 u8Switch1;
+
+	u8 u8Switch2;
+	//DIO_enuGetPinValue(1,&u8Switch2);
+	u8 u8Switch3;
+	//DIO_enuGetPinValue(2,&u8Switch3);
+
+	u8 u8num1=0;
+	u8 u8num2=0;
+	u8 u8result=0;
+
+
+	while(1){
+		//DIO_enuGetPinValue(0,&u8Switch1);
+		//DIO_enuGetPinValue(1,&u8Switch2);
+		//DIO_enuGetPinValue(2,&u8Switch3);
+
+
+		 incrementDecrement(&u8num1);
+
+
+
+
+
+	/*	}else if (u8Switch3==DIO_LOW){
+			_delay_ms(300);
+			write_data('+');
+		}
+*/
+
+
+		//_delay_ms(300);
+		_delay_ms(50);
+		write_command(0b00000001);
+		//_delay_ms(100);
+		write_data(u8numAsci[u8num1]);
+		_delay_ms(50);
+
+
+
+	}
+
+
+
+
+
+
+
+	return 0;
+}
+
